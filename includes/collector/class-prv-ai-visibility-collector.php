@@ -64,9 +64,8 @@ class PRV_Ai_Visibility_Collector implements PRV_Data_Collector {
 		$table = PRV_Table_Manager::get_table_name();
 
 		// ── Trendline: one score per run_id ────────────────────────────
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$run_rows = $wpdb->get_results(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			"SELECT run_id, MIN(captured_at) AS captured_at,
 			        SUM(cited) AS cited_count,
 			        COUNT(*) AS total_count,
@@ -92,9 +91,8 @@ class PRV_Ai_Visibility_Collector implements PRV_Data_Collector {
 		}
 
 		// ── Standings: latest result per peptide ────────────────────────
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$standing_rows = $wpdb->get_results(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			"SELECT peptide_slug, peptide_label,
 			        MAX(cited) AS cited,
 			        MIN(CASE WHEN cited=1 THEN our_position ELSE NULL END) AS our_position,
@@ -119,9 +117,8 @@ class PRV_Ai_Visibility_Collector implements PRV_Data_Collector {
 		}
 
 		// ── Run metadata ────────────────────────────────────────────────
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$last_run = $wpdb->get_var(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			"SELECT MAX(captured_at) FROM {$table}"
 		);
 

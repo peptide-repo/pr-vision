@@ -155,10 +155,8 @@ class PRV_Perplexity_Provider implements PRV_Probe_Provider {
 	 */
 	private function resolve_api_key(): string {
 		if ( ! defined( 'PRV_OPENROUTER_API_KEY' ) || '' === PRV_OPENROUTER_API_KEY ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-			throw new \RuntimeException(
-				__( 'PRV_OPENROUTER_API_KEY constant is not defined. Add it to wp-config.php.', 'pr-vision' )
-			);
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- exception message, not HTML output
+			throw new \RuntimeException( __( 'PRV_OPENROUTER_API_KEY constant is not defined. Add it to wp-config.php.', 'pr-vision' ) );
 		}
 		return PRV_OPENROUTER_API_KEY;
 	}

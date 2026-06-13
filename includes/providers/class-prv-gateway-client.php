@@ -110,10 +110,8 @@ class PRV_Gateway_Client {
 				}
 
 				if ( $status >= 400 ) {
-					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-					throw new \RuntimeException(
-						sprintf( 'PR Vision gateway HTTP %d: %s', $status, substr( $raw_body, 0, 300 ) )
-					);
+					// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- exception message, not HTML output
+					throw new \RuntimeException( sprintf( 'PR Vision gateway HTTP %d: %s', $status, substr( $raw_body, 0, 300 ) ) );
 				}
 
 				$data = json_decode( $raw_body, true );
@@ -127,10 +125,8 @@ class PRV_Gateway_Client {
 			remove_action( 'http_api_curl', $curl_filter, 99 );
 		}
 
-		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-		throw new \RuntimeException(
-			sprintf( 'PR Vision: gateway failed after %d attempts. Last: %s', PRV_MAX_RETRIES, $last_error )
-		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- exception message, not HTML output
+		throw new \RuntimeException( sprintf( 'PR Vision: gateway failed after %d attempts. Last: %s', PRV_MAX_RETRIES, $last_error ) );
 	}
 
 	/**

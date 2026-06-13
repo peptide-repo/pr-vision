@@ -87,7 +87,7 @@ class PRV_Ai_Visibility_Panel implements PRV_Dashboard_Panel {
 	/**
 	 * Render the Chart.js visibility score trendline.
 	 *
-	 * @param array<int, array{run_id: string, captured_at: string, score: float}> $trendline
+	 * @param array<int, array{run_id: string, captured_at: string, score: float}> $trendline Trendline data points.
 	 *
 	 * @return void
 	 */
@@ -122,7 +122,7 @@ class PRV_Ai_Visibility_Panel implements PRV_Dashboard_Panel {
 	/**
 	 * Render the per-peptide current standings table.
 	 *
-	 * @param array<string, array{label: string, cited: bool, our_position: int|null, top_domains: string[], model_count: int}> $standings
+	 * @param array<string, array{label: string, cited: bool, our_position: int|null, top_domains: string[], model_count: int}> $standings Per-peptide standing data.
 	 *
 	 * @return void
 	 */
