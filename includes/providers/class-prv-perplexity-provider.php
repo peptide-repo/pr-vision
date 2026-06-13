@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Perplexity sonar provider — primary citation signal.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

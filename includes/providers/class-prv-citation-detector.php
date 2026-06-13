@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Detects whether peptiderepo.com appears in LLM source citations.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

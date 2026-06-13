@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Registry for PR Vision data collectors and dashboard panels.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

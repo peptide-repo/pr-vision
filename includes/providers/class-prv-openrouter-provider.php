@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Generic OpenRouter provider for GPT-search and Gemini-search models.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

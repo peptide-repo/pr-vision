@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * AI-visibility dashboard panel renderer.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

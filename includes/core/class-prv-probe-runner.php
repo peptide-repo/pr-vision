@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Orchestrates a full probe run across peptides, intents, and models.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**
@@ -86,7 +91,7 @@ class PRV_Probe_Runner {
 						$result = $provider->probe( $query );
 					} catch ( \Exception $e ) {
 						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-					error_log( sprintf( 'PRV: probe failed [%s / %s]: %s', $model, $peptide['slug'], $e->getMessage() ) );
+						error_log( sprintf( 'PRV: probe failed [%s / %s]: %s', $model, $peptide['slug'], $e->getMessage() ) );
 						++$counts['skipped_error'];
 						continue;
 					}
@@ -107,11 +112,11 @@ class PRV_Probe_Runner {
 	/**
 	 * Persist a single probe result to the database.
 	 *
-	 * @param string          $run_id     UUID for this run.
-	 * @param array<string,string> $peptide Peptide config with slug and label.
-	 * @param string          $model      Model identifier.
-	 * @param string          $intent_tpl Raw intent template string.
-	 * @param PRV_Probe_Result $result    Probe result.
+	 * @param string               $run_id     UUID for this run.
+	 * @param array<string,string> $peptide    Peptide config with slug and label.
+	 * @param string               $model      Model identifier.
+	 * @param string               $intent_tpl Raw intent template string.
+	 * @param PRV_Probe_Result     $result     Probe result.
 	 *
 	 * @return int Inserted row ID, or 0 on failure.
 	 */

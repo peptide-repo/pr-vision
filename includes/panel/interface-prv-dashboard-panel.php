@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Contract for all PR Vision dashboard panels.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

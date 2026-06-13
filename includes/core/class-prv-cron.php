@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * WP-Cron management for the weekly AI-visibility probe.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

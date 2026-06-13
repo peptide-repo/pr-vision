@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Month-to-date cost tracking and budget-cap enforcement.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

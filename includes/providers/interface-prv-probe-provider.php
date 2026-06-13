@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Contract for all LLM probe providers.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

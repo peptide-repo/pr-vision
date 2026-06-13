@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Class and interface autoloader for the PR Vision plugin.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

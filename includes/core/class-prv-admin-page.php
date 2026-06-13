@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * PR Vision top-level admin page.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

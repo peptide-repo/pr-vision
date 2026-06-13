@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Database table creation and schema versioning for PR Vision.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

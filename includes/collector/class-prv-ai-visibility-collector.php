@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * AI-visibility data collector for the PR Vision dashboard.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

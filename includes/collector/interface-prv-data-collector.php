@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Contract for all PR Vision data collectors.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

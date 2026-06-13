@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Cloudflare AI Gateway HTTP client shared by all providers.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

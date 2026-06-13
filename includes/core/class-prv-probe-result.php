@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Immutable value object returned by every probe provider.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

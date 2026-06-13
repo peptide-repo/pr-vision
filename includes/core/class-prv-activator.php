@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Plugin activation handler.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

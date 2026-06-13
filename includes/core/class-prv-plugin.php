@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Main orchestrator for the PR Vision plugin.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**

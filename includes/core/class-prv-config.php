@@ -1,5 +1,10 @@
 <?php
-/** @package PrVision */
+/**
+ * Configuration getters and default-seeding for PR Vision.
+ *
+ * @package PrVision
+ */
+
 declare(strict_types=1);
 
 /**
