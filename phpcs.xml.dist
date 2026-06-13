@@ -9,8 +9,6 @@
 	<exclude-pattern>/tests/*</exclude-pattern>
 
 	<arg name="extensions" value="php"/>
-	<arg name="severity" value="1"/>
-	<arg name="warning-severity" value="0"/>
 	<arg value="sp"/>
 
 	<rule ref="WordPress"/>
