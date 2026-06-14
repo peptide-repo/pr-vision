@@ -95,12 +95,12 @@ class PRV_Ai_Visibility_Panel implements PRV_Dashboard_Panel {
 	/**
 	 * Prepare bento-band data and delegate rendering to PRV_Dashboard_Renderer.
 	 *
-	 * @param array<int, array{run_id: string, captured_at: string, score: float}> $trendline       Trendline data.
-	 * @param array<string, array{label: string, cited: bool}>                     $standings        Standings map.
-	 * @param string                                                                $last_run_at      Formatted timestamp.
-	 * @param float                                                                 $mtd_cost         Month-to-date spend USD.
-	 * @param float                                                                 $cap              Monthly cap USD.
-	 * @param array<string, array{health_status: string}>                          $last_run_counts  Per-model health.
+	 * @param array  $trendline       Trendline data points from PRV_Ai_Visibility_Collector.
+	 * @param array  $standings       Per-peptide standings map.
+	 * @param string $last_run_at     Formatted run timestamp or "Never".
+	 * @param float  $mtd_cost        Month-to-date spend in USD.
+	 * @param float  $cap             Monthly budget cap in USD.
+	 * @param array  $last_run_counts Per-model health map (slug → {health_status}).
 	 *
 	 * @return void
 	 */
@@ -174,7 +174,8 @@ class PRV_Ai_Visibility_Panel implements PRV_Dashboard_Panel {
 
 			echo '<tr>';
 			echo '<td>' . esc_html( (string) $row['label'] ) . '</td>';
-			echo '<td><span class="' . esc_attr( $cited_class ) . '">' . $cited_dot . ' ' . $cited_label . '</span></td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped — dot is HTML entity; label escaped above; class esc_attr'd
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- dot is a fixed HTML entity; label is escaped by esc_html__() above; class is esc_attr'd
+			echo '<td><span class="' . esc_attr( $cited_class ) . '">' . $cited_dot . ' ' . $cited_label . '</span></td>';
 			echo '<td>' . esc_html( $position ) . '</td>';
 			echo '<td>' . wp_kses_post( $domains ) . '</td>';
 			echo '</tr>';
