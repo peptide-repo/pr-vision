@@ -15,15 +15,15 @@ declare(strict_types=1);
  * @package PrVision
  */
 class PRV_Probe_Run_Executor {
-
 	/**
 	 * Budget ledger for cost-cap enforcement.
+	 *
 	 * @var PRV_Cost_Ledger
 	 */
 	private PRV_Cost_Ledger $ledger;
-
 	/**
 	 * Per-call capture writer (best-effort; never in critical path).
+	 *
 	 * @var PRV_Capture_Writer
 	 */
 	private PRV_Capture_Writer $capture;
