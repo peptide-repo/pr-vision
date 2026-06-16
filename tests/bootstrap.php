@@ -1,14 +1,19 @@
 <?php
 /**
- * Minimal test bootstrap -- stubs all WordPress functions used by the plugin
- * so classes can be exercised in plain PHP without a WP install.
+ * PHPUnit bootstrap for PR Vision tests.
  *
- * Pattern mirrors peptide-repo-core's bootstrap (flat PHP, no PHPUnit).
+ * Loads WP stubs in plain PHP (no WP install required) and registers
+ * the plugin autoloader so all classes are available to PHPUnit test cases.
+ *
+ * Pattern: WP stubs (tests: stubs) — no DB, no service, fast.
  *
  * @package PrVision
  */
 
 declare(strict_types=1);
+
+// Composer autoloader must come first so PHPUnit classes are available.
+require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
@@ -27,7 +32,7 @@ if ( ! defined( 'ARRAY_N' ) ) {
 	define( 'ARRAY_N', 'ARRAY_N' );
 }
 
-define( 'PRV_VERSION', '0.3.1' );
+define( 'PRV_VERSION', '0.3.2' );
 define( 'PRV_PLUGIN_FILE', __DIR__ . '/../pr-vision.php' );
 define( 'PRV_PLUGIN_DIR', realpath( __DIR__ . '/..' ) . '/' );
 define( 'PRV_PLUGIN_URL', 'http://example.test/wp-content/plugins/pr-vision/' );
@@ -41,6 +46,30 @@ define( 'PRV_TARGET_DOMAIN', 'peptiderepo.com' );
 define( 'PRV_IO_RETENTION_DEFAULT_DAYS', 90 );
 define( 'PRV_DAILY_PRUNE_HOOK', 'prv_daily_prune' );
 
+// Salt constants required by PRV_Key_Store::derive_encryption_key().
+// These provide deterministic 64-char salts matching the pattern in test-key-store.php.
+if ( ! defined( 'AUTH_KEY' ) ) {
+	define( 'AUTH_KEY', 'test-auth-key-at-least-64-chars-long-for-realistic-entropy-aaaa' );
+}
+if ( ! defined( 'SECURE_AUTH_KEY' ) ) {
+	define( 'SECURE_AUTH_KEY', 'test-secure-auth-key-64-chars-long-realistic-entropy-bbbb-cccc' );
+}
+
+// Provider key constant; defined here once so no test class defines it mid-run.
+// Tests that need a configured key get it from this constant (via PRV_Key_Store::get_key()).
+// The sentinel leak test (CaptureWriterTest) asserts this value does not appear in stored rows.
+if ( ! defined( 'PRV_OPENROUTER_API_KEY' ) ) {
+	define( 'PRV_OPENROUTER_API_KEY', 'sk-or-test-key' );
+}
+
+// Cloudflare gateway constants (empty in test environment).
+if ( ! defined( 'PRV_CF_ACCOUNT_ID' ) ) {
+	define( 'PRV_CF_ACCOUNT_ID', '' );
+}
+if ( ! defined( 'PRV_CF_GATEWAY_ID' ) ) {
+	define( 'PRV_CF_GATEWAY_ID', '' );
+}
+
 /* ── Global test state ─────────────────────────────────────────────────── */
 
 $GLOBALS['prv_test_state'] = [
@@ -49,6 +78,7 @@ $GLOBALS['prv_test_state'] = [
 	'actions'              => [],
 	'wpdb_insert_id'       => 1,
 	'wpdb_results'         => [],
+	'wpdb_results_queue'   => [],
 	'wpdb_var'             => null,
 	'wpdb_row'             => null,
 	'cron_events'          => [],
@@ -65,6 +95,7 @@ function prv_test_reset(): void {
 		'actions'              => [],
 		'wpdb_insert_id'       => 1,
 		'wpdb_results'         => [],
+		'wpdb_results_queue'   => [],
 		'wpdb_var'             => null,
 		'wpdb_row'             => null,
 		'cron_events'          => [],
@@ -260,6 +291,10 @@ class stdClass_wpdb {
 	}
 	public function update( string $table, array $data, array $where, array $df = [], array $wf = [] ): int { return 1; }
 	public function get_results( string $query, string $output = 'OBJECT' ): array {
+		// Queue mode: if wpdb_results_queue is non-empty, shift one result set.
+		if ( ! empty( $GLOBALS['prv_test_state']['wpdb_results_queue'] ) ) {
+			return (array) array_shift( $GLOBALS['prv_test_state']['wpdb_results_queue'] );
+		}
 		return is_array( $GLOBALS['prv_test_state']['wpdb_results'] ) ? $GLOBALS['prv_test_state']['wpdb_results'] : [];
 	}
 	public function get_row( string $query, string $output = 'OBJECT' ): mixed { return $GLOBALS['prv_test_state']['wpdb_row'] ?? null; }
@@ -269,47 +304,6 @@ class stdClass_wpdb {
 $wpdb = new stdClass_wpdb();
 
 function dbDelta( string $sql ): array { return []; }
-
-/* ── Test assertion helpers ────────────────────────────────────────────── */
-
-$GLOBALS['prv_test_report'] = [ 'pass' => 0, 'fail' => 0, 'failures' => [] ];
-
-function prv_assert( bool $condition, string $label ): void {
-	if ( $condition ) {
-		$GLOBALS['prv_test_report']['pass']++;
-		echo "  PASS: {$label}\n";
-	} else {
-		$GLOBALS['prv_test_report']['fail']++;
-		$GLOBALS['prv_test_report']['failures'][] = $label;
-		echo "  FAIL: {$label}\n";
-	}
-}
-
-function prv_assert_equals( $expected, $actual, string $label ): void {
-	$pass = ( $expected === $actual );
-	prv_assert( $pass, $label . ( $pass ? '' : ' -- expected ' . var_export( $expected, true ) . ', got ' . var_export( $actual, true ) ) );
-}
-
-function prv_assert_throws( callable $fn, string $exception_class, string $label ): void {
-	try {
-		$fn();
-		prv_assert( false, $label . ' -- expected ' . $exception_class . ' but no exception thrown' );
-	} catch ( \Throwable $e ) {
-		prv_assert( $e instanceof $exception_class, $label . ' -- got ' . get_class( $e ) );
-	}
-}
-
-function prv_test_summary(): int {
-	$r = $GLOBALS['prv_test_report'];
-	echo "\n---\n";
-	echo "Totals: {$r['pass']} passed, {$r['fail']} failed\n";
-	if ( $r['fail'] > 0 ) {
-		echo "Failures:\n";
-		foreach ( $r['failures'] as $f ) { echo "  - {$f}\n"; }
-		return 1;
-	}
-	return 0;
-}
 
 /* ── Load autoloader + all plugin classes ──────────────────────────────── */
 
