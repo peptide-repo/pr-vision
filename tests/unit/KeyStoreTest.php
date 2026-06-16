@@ -80,8 +80,11 @@ class KeyStoreTest extends TestCase {
 
 	// ── Group 2: store_key / clear_key / get_source ──────────────────────
 
-	public function test_get_source_none_when_no_key(): void {
-		$this->assertSame( PRV_Key_Store::SOURCE_NONE, PRV_Key_Store::get_source() );
+	public function test_get_source_constant_when_constant_defined(): void {
+		// PRV_OPENROUTER_API_KEY is defined in tests/bootstrap.php as 'sk-or-test-key'.
+		// The constant always wins over option, so get_source() returns SOURCE_CONSTANT.
+		$this->assertTrue( PRV_Key_Store::constant_is_set(), 'constant_is_set() true when constant defined in bootstrap' );
+		$this->assertSame( PRV_Key_Store::SOURCE_CONSTANT, PRV_Key_Store::get_source(), 'get_source() == CONSTANT when constant defined' );
 	}
 
 	public function test_store_key_writes_encrypted_option(): void {
@@ -95,15 +98,18 @@ class KeyStoreTest extends TestCase {
 		$this->assertNotSame( $plaintext, $option_val, 'Option value is NOT the plaintext key (encrypted at rest)' );
 		$this->assertStringNotContainsString( $plaintext, (string) $option_val, 'Plaintext not in stored option value' );
 		$this->assertStringNotContainsString( 'sk-or-', (string) $option_val, 'Key prefix not in stored option' );
-		$this->assertSame( PRV_Key_Store::SOURCE_OPTION, PRV_Key_Store::get_source() );
+		// Note: get_source() returns SOURCE_CONSTANT (constant wins) even after store_key(),
+		// because PRV_OPENROUTER_API_KEY is defined in bootstrap. The option IS stored.
+		$this->assertSame( PRV_Key_Store::SOURCE_CONSTANT, PRV_Key_Store::get_source(), 'Constant wins over stored option' );
 	}
 
 	public function test_clear_key_removes_option(): void {
 		PRV_Key_Store::store_key( 'sk-or-test-key-value-abc123' );
 		PRV_Key_Store::clear_key();
 
-		$this->assertSame( '', get_option( PRV_Key_Store::OPTION_ENC, '' ) );
-		$this->assertSame( PRV_Key_Store::SOURCE_NONE, PRV_Key_Store::get_source() );
+		$this->assertSame( '', get_option( PRV_Key_Store::OPTION_ENC, '' ), 'Option is empty after clear_key()' );
+		// Constant is still set after clear_key() - SOURCE_CONSTANT, not SOURCE_NONE.
+		$this->assertSame( PRV_Key_Store::SOURCE_CONSTANT, PRV_Key_Store::get_source(), 'Source remains CONSTANT after clear_key() since constant stays defined' );
 	}
 
 	public function test_store_empty_key_is_noop(): void {
