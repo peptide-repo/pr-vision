@@ -17,6 +17,6 @@ jobs:
     uses: peptiderepo/peptide-e2e/.github/workflows/ci.yml@main
     with:
       tests: stubs
-      has_js: true
+      has_js: false
       line_limit_paths: includes
     secrets: inherit

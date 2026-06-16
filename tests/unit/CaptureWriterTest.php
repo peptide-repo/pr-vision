@@ -122,6 +122,14 @@ class CaptureWriterTest extends TestCase {
 
 	// ── Test 4 (P0 SECURITY — executor path): sentinel must not leak ──────
 
+	/**
+	 * Defines PRV_OPENROUTER_API_KEY as a process-scoped PHP constant.
+	 * Must run in a separate process to prevent that constant from bleeding
+	 * into sibling test classes (e.g. KeyStoreTest) within the same PHPUnit run.
+	 *
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
 	public function test_p0_executor_path_sentinel_key_does_not_leak(): void {
 		if ( ! defined( 'PRV_OPENROUTER_API_KEY' ) ) {
 			define( 'PRV_OPENROUTER_API_KEY', 'sk-or-TEST-LEAK-CANARY' );
